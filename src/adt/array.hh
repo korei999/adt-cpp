@@ -52,14 +52,14 @@ template<typename T, typename ALLOC>
 T*
 Array<T, ALLOC>::back()
 {
-    return &pData[this->size - 1];
+    return &this->pData[this->size - 1];
 }
 
 template<typename T, typename ALLOC>
 T*
 Array<T, ALLOC>::front()
 {
-    return &pData[0];
+    return &this->pData[0];
 }
 
 } /* namespace adt */
