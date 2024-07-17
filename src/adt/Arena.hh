@@ -37,13 +37,13 @@ struct Arena : __BaseAllocator
     size_t blockSize = 0;
 
     Arena(size_t cap);
-    ~Arena();
 
     void reset();
     size_t alignedBytes(size_t bytes);
     void* alloc(size_t memberCount, size_t size);
     void free(void* p);
     void* realloc(void* p, size_t size);
+    void freeArena();
 
 private:
     ArenaBlock* newBlock();
@@ -55,12 +55,6 @@ Arena::Arena(size_t cap)
     : blockSize(alignedBytes(cap + sizeof(ArenaNode))) /* preventively align */
 {
     this->newBlock();
-}
-
-Arena::~Arena()
-{
-    ARENA_FOREACH_SAFE(this, it, tmp)
-        ::free(it);
 }
 
 void
@@ -208,6 +202,13 @@ Arena::realloc(void* p, size_t size)
         pNode->size = 0;
         return pR;
     }
+}
+
+void
+Arena::freeArena()
+{
+    ARENA_FOREACH_SAFE(this, it, tmp)
+        ::free(it);
 }
 
 } /* namespace adt */

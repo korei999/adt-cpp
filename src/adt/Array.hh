@@ -11,10 +11,9 @@ struct Array
     T* pData = nullptr;
     size_t size = 0;
     size_t capacity = 0;
-    ALLOC& allocator;
+    ALLOC* allocator;
 
-    Array(size_t _capacity = SIZE_MIN, ALLOC& _allocator = g::StdAllocator);
-    ~Array();
+    Array(size_t _capacity = SIZE_MIN, ALLOC* _allocator = &g::StdAllocator);
 
     T& operator[](size_t i) { return this->pData[i]; }
 
@@ -22,19 +21,14 @@ struct Array
     T* back();
     T* front();
     void reallocate(size_t _size);
+    void free() { this->allocator->free(this->pData); }
 };
 
 template<typename T, typename ALLOC>
-Array<T, ALLOC>::Array(size_t _capacity, ALLOC& _allocator)
+Array<T, ALLOC>::Array(size_t _capacity, ALLOC* _allocator)
     : capacity(_capacity), allocator(_allocator)
 {
-    pData = static_cast<T*>(this->allocator.alloc(this->capacity, sizeof(T)));
-}
-
-template<typename T, typename ALLOC>
-Array<T, ALLOC>::~Array()
-{
-    this->allocator.free(this->pData);
+    pData = static_cast<T*>(this->allocator->alloc(this->capacity, sizeof(T)));
 }
 
 template<typename T, typename ALLOC>
@@ -70,7 +64,7 @@ void
 Array<T, ALLOC>::reallocate(size_t _size)
 {
     this->capacity = _size;
-    this->pData = static_cast<T*>(this->allocator.realloc(this->pData, sizeof(T) * _size));
+    this->pData = static_cast<T*>(this->allocator->realloc(this->pData, sizeof(T) * _size));
 }
 
 } /* namespace adt */

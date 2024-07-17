@@ -52,7 +52,7 @@ struct HashMap
 
     HashMap(size_t capacity = SIZE_MIN,
             f64 _maxLoadFactor = HASHMAP_DEFAULT_LOAD_FACTOR,
-            ALLOC& allocator = g::StdAllocator)
+            ALLOC* allocator = &g::StdAllocator)
         : maxLoadFactor(_maxLoadFactor), aBuckets(capacity, allocator) {}
 
     f64 loadFactor() const { return static_cast<f64>(this->bucketCount) / static_cast<f64>(this->aBuckets.capacity); }
@@ -61,6 +61,7 @@ struct HashMap
     HashMapIt<T> search(const T& value);
     void remove(size_t i);
     HashMapIt<T> tryInsert(const T& value);
+    void free() { this->aBuckets.free(); }
 };
 
 template<typename T, typename ALLOC>
