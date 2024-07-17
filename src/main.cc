@@ -1,7 +1,8 @@
 #include <stdio.h>
 
-#include "adt/arena.hh"
-#include "adt/array.hh"
+#include "adt/Arena.hh"
+#include "adt/Array.hh"
+#include "adt/String.hh"
 
 int
 main()
@@ -30,7 +31,7 @@ main()
     printf("next - kekw = %zu\n", next - kekw);
 
     auto od = offsetof(adt::ArenaNode, pData);
-    /*printf("od: %zu\n", od);*/
+    printf("od: %zu\n", od);
 
     auto pAData = ARENA_NODE_GET_FROM_DATA(kekw);
     printf("pAData.size: %zu\n", pAData->size);
@@ -42,4 +43,19 @@ main()
 
     printf("back(): %d\n", *arr.back());
     printf("arr[1]: %d\n", arr[1]);
+
+    adt::String ss = "ss";
+    adt::String ssss = ss + ss;
+    printf("ss: '%s'\n", ss.sData);
+    printf("ssss: '%s'\n", ssss.sData);
+
+    adt::String ssa("ssa", a);
+    adt::String asa("asa", a);
+    printf("ssa: '%s'\n", ssa.sData);
+    ssa += asa;
+    printf("ssa: '%s'\n", ssa.sData);
+
+    adt::String add = "add";
+    adt::String string = "string";
+    add += string;
 }
