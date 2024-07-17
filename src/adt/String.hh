@@ -103,4 +103,11 @@ struct StringView
     const CHAR_T& operator[](size_t i) const { return this->pData[i]; }
 };
 
+template<typename CHAR_T>
+bool
+operator==(const StringView<CHAR_T>& sL, const StringView<CHAR_T>& sR)
+{
+    return strncmp(sL.pData, sR.pData, min(sL.size, sR.size)) == 0;
+}
+
 } /* namespace adt */

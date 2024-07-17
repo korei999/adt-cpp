@@ -60,6 +60,7 @@ struct HashMap
     HashMapIt<T> insert(const T& value);
     HashMapIt<T> search(const T& value);
     void remove(size_t i);
+    void rehash(size_t _size);
     HashMapIt<T> tryInsert(const T& value);
     void free() { this->aBuckets.free(); }
 };
@@ -69,7 +70,7 @@ HashMapIt<T>
 HashMap<T, ALLOC>::insert(const T& value)
 {
     if (this->loadFactor() >= this->maxLoadFactor)
-        this->aBuckets.reallocate(this->capacity() * 2);
+        this->rehash(this->capacity() * 2);
 
     size_t hash = fnHash(value);
     size_t idx = hash % this->capacity();
@@ -125,6 +126,20 @@ HashMap<T, ALLOC>::remove(size_t i)
 {
     this->aBuckets[i].bDeleted = true;
     this->aBuckets[i].bOccupied = false;
+}
+
+template<typename T, typename ALLOC>
+void
+HashMap<T, ALLOC>::rehash(size_t _size)
+{
+    auto mNew = HashMap<T, ALLOC>(_size, HASHMAP_DEFAULT_LOAD_FACTOR, this->aBuckets.allocator);
+
+    for (size_t i = 0; i < this->aBuckets.capacity; i++)
+        if (this->aBuckets[i].bOccupied)
+            mNew.insert(this->aBuckets[i].data);
+
+    this->free();
+    *this = mNew;
 }
 
 template<typename T, typename ALLOC>

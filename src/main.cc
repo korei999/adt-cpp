@@ -18,6 +18,11 @@ main()
 
     adt::HashMap<adt::StringView<char>> hmS{};
     hmS.insert(kekw);
+    auto fs = hmS.search("what");
+    if (fs.pData)
+        printf("fs: '%s'\n", fs.pData->pData);
+    else
+        printf("fs: not found\n");
 
     printf("aS.back: '%s'\n", aS.back().pData);
 
