@@ -14,9 +14,12 @@ main()
     adt::String kekw = "kekw";
     adt::String kekw2 = kekw;
 
-    adt::HashMap<adt::String<char>> hmS{};
+    aS.push(kekw);
 
-    printf("aS.back: '%s'\n", aS.back()->pData);
+    adt::HashMap<adt::StringView<char>> hmS{};
+    hmS.insert(kekw);
+
+    printf("aS.back: '%s'\n", aS.back().pData);
 
     aS.free();
     hmS.free();

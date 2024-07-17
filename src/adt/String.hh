@@ -98,6 +98,9 @@ struct StringView
     StringView(CHAR_T* sNullTerminated) : pData(sNullTerminated), size(strlen(sNullTerminated)) {}
     StringView(CHAR_T* sNullTerminated, size_t len) : pData(sNullTerminated), size(len) {}
     StringView(const String<CHAR_T>& s) : pData(s.pData), size(s.size) {}
+
+    CHAR_T& operator[](size_t i) { return this->pData[i]; }
+    const CHAR_T& operator[](size_t i) const { return this->pData[i]; }
 };
 
 } /* namespace adt */

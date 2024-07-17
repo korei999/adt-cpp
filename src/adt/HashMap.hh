@@ -15,9 +15,9 @@ fnHash(const size_t& value)
 }
 
 /* FNV */
-template<typename CHAR_T, typename ALLOC>
+template<typename CHAR_T>
 size_t
-fnHash(const String<CHAR_T, ALLOC>& str)
+fnHash(const StringView<CHAR_T> str)
 {
     size_t hash = 0xCBF29CE484222325;
     for (size_t i = 0; i < str.size; i++)

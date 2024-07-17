@@ -18,8 +18,8 @@ struct Array
     T& operator[](size_t i) { return this->pData[i]; }
 
     T* push(const T& data);
-    T* back();
-    T* front();
+    T& back();
+    T& front();
     void reallocate(size_t _size);
     void free() { this->allocator->free(this->pData); }
 };
@@ -42,21 +42,21 @@ Array<T, ALLOC>::push(const T& data)
 
     memset(&this->pData[this->size], 0, sizeof(T) * (this->capacity - this->size));
 
-    return this->back();
+    return &this->back();
 }
 
 template<typename T, typename ALLOC>
-T*
+T&
 Array<T, ALLOC>::back()
 {
-    return &this->pData[this->size - 1];
+    return this->pData[this->size - 1];
 }
 
 template<typename T, typename ALLOC>
-T*
+T&
 Array<T, ALLOC>::front()
 {
-    return &this->pData[0];
+    return this->pData[0];
 }
 
 template<typename T, typename ALLOC>
