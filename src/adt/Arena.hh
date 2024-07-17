@@ -8,8 +8,8 @@
 
 #define ARENA_FIRST(A) ((A)->pBlocks)
 #define ARENA_NEXT(AB) ((AB)->pNext)
-#define ARENA_FOREACH(A, IT) for (ArenaBlock* (IT) = ARENA_FIRST(A); (IT); (IT) = ARENA_NEXT(IT))
-#define ARENA_FOREACH_SAFE(A, IT, TMP) for (ArenaBlock* (IT) = ARENA_FIRST(A), * (TMP) = nullptr; (IT) && ((TMP) = ARENA_NEXT(IT), true); (IT) = (TMP))
+#define ARENA_FOREACH(A, IT) for (ArenaBlock* IT = ARENA_FIRST(A); IT; IT = ARENA_NEXT(IT))
+#define ARENA_FOREACH_SAFE(A, IT, TMP) for (ArenaBlock* IT = ARENA_FIRST(A), * TMP = nullptr; IT && ((TMP) = ARENA_NEXT(IT), true); (IT) = (TMP))
 
 #define ARENA_NODE_GET_FROM_DATA(PDATA) (reinterpret_cast<adt::ArenaNode*>(reinterpret_cast<u8*>(PDATA) - offsetof(adt::ArenaNode, pData)))
 #define ARENA_NODE_GET_FROM_BLOCK(PBLOCK) (reinterpret_cast<adt::ArenaNode*>(reinterpret_cast<u8*>(PBLOCK) + offsetof(adt::ArenaBlock, pData)))

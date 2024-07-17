@@ -8,7 +8,7 @@
 namespace adt
 {
 
-using NullPtr = decltype(nullptr);
+using Nullptr = decltype(nullptr);
 
 constexpr size_t SIZE_MIN = 16UL;
 constexpr size_t SIZE_1K = 1024UL;

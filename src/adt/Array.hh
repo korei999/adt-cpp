@@ -21,13 +21,14 @@ struct Array
     T* push(const T& data);
     T* back();
     T* front();
+    void reallocate(size_t _size);
 };
 
 template<typename T, typename ALLOC>
 Array<T, ALLOC>::Array(size_t _capacity, ALLOC& _allocator)
     : capacity(_capacity), allocator(_allocator)
 {
-    pData = static_cast<T*>(this->allocator.alloc(this->capacity, 1));
+    pData = static_cast<T*>(this->allocator.alloc(this->capacity, sizeof(T)));
 }
 
 template<typename T, typename ALLOC>
@@ -43,7 +44,9 @@ Array<T, ALLOC>::push(const T& data)
     this->pData[this->size++] = data;
 
     if (this->size >= this->capacity)
-        this->pData = static_cast<T*>(this->allocator.realloc(this->pData, sizeof(T) * (this->capacity *= 2)));
+        this->reallocate(this->capacity * 2);
+
+    memset(&this->pData[this->size], 0, sizeof(T) * (this->capacity - this->size));
 
     return this->back();
 }
@@ -60,6 +63,14 @@ T*
 Array<T, ALLOC>::front()
 {
     return &this->pData[0];
+}
+
+template<typename T, typename ALLOC>
+void
+Array<T, ALLOC>::reallocate(size_t _size)
+{
+    this->capacity = _size;
+    this->pData = static_cast<T*>(this->allocator.realloc(this->pData, sizeof(T) * _size));
 }
 
 } /* namespace adt */

@@ -3,6 +3,7 @@
 #include <string.h>
 
 #include "Common.hh"
+#include "Utils.hh"
 
 namespace adt
 {
@@ -10,23 +11,33 @@ namespace adt
 template<typename CHAR_T = char, typename ALLOC = DefaultAllocator>
 struct String
 {
-    CHAR_T* sData = nullptr;
+    CHAR_T* pData = nullptr;
     size_t size = 0;
     ALLOC& allocator;
 
     String(ALLOC& _allocator = g::StdAllocator) : allocator(_allocator) {}
     String(const CHAR_T* sNullTerminated, ALLOC& _allocator = g::StdAllocator);
-    ~String() { this->allocator.free(this->sData); }
+    String(const String& other);
+    ~String() { this->allocator.free(this->pData); }
 
-    CHAR_T& operator[](size_t i) { return this->sData[i]; }
+    CHAR_T& operator[](size_t i) { return this->pData[i]; }
+    String& operator=(const String& other);
 };
 
 template<typename CHAR_T, typename ALLOC>
 String<CHAR_T, ALLOC>::String(const CHAR_T* sNullTerminated, ALLOC& _allocator)
     : size(strlen(sNullTerminated)), allocator(_allocator)
 {
-    this->sData = static_cast<CHAR_T*>(this->allocator.alloc(this->size + 1, sizeof(CHAR_T)));
-    strncpy(sData, sNullTerminated, this->size);
+    this->pData = static_cast<CHAR_T*>(this->allocator.alloc(this->size + 1, sizeof(CHAR_T)));
+    strncpy(pData, sNullTerminated, this->size);
+}
+
+template<typename CHAR_T, typename ALLOC>
+String<CHAR_T, ALLOC>::String(const String& other)
+    : size(other.size), allocator(other.allocator)
+{
+    this->pData = static_cast<CHAR_T*>(this->allocator.alloc(this->size + 1, sizeof(CHAR_T)));
+    strncpy(this->pData, other.pData, this->size);
 }
 
 template<typename CHAR_T, typename ALLOC>
@@ -36,9 +47,9 @@ operator+(const String<CHAR_T, ALLOC>& sL, const String<CHAR_T, ALLOC>& sR)
     String<CHAR_T, ALLOC> ret(sL.allocator);
 
     ret.size = sL.size + sR.size + 1;
-    ret.sData = static_cast<CHAR_T*>(ret.allocator.alloc(ret.size, sizeof(CHAR_T)));
-    strncpy(ret.sData, sL.sData, sL.size);
-    strncpy(&ret.sData[sL.size], sR.sData, sR.size);
+    ret.pData = static_cast<CHAR_T*>(ret.allocator.alloc(ret.size, sizeof(CHAR_T)));
+    strncpy(ret.pData, sL.pData, sL.size);
+    strncpy(&ret.pData[sL.size], sR.pData, sR.size);
 
     return ret;
 }
@@ -48,24 +59,44 @@ String<CHAR_T, ALLOC>&
 operator+=(String<CHAR_T, ALLOC>& sL, const String<CHAR_T, ALLOC>& sR)
 {
     size_t newSize = sL.size + sR.size + 1;
-    sL.sData = static_cast<CHAR_T*>(sL.allocator.realloc(sL.sData, sizeof(CHAR_T) * newSize));
-    sL.sData[newSize - 1] = static_cast<CHAR_T>('\0');
-    strncpy(&sL.sData[sL.size], sR.sData, sR.size);
+    sL.pData = static_cast<CHAR_T*>(sL.allocator.realloc(sL.pData, sizeof(CHAR_T) * newSize));
+    sL.pData[newSize - 1] = static_cast<CHAR_T>('\0');
+    strncpy(&sL.pData[sL.size], sR.pData, sR.size);
     sL.size = newSize;
 
     return sL;
 }
 
+template<typename CHAR_T, typename ALLOC>
+bool
+operator==(const String<CHAR_T, ALLOC>& sL, const String<CHAR_T, ALLOC>& sR)
+{
+    return strncmp(sL.pData, sR.pData, min(sL.size, sR.size)) == 0;
+}
+
+template<typename CHAR_T, typename ALLOC>
+String<CHAR_T, ALLOC>&
+String<CHAR_T, ALLOC>::operator=(const String<CHAR_T, ALLOC>& other)
+{
+    this->allocator = other.allocator;
+    this->pData = static_cast<CHAR_T*>(this->allocator.realloc(this->pData, (other.size + 1) * sizeof(CHAR_T)));
+    strncpy(pData, other.pData, other.size);
+    this->size = other.size;
+    this->pData[this->size - 1] = static_cast<CHAR_T>('\0');
+
+    return *this;
+}
+
 template<typename CHAR_T>
 struct StringView
 {
-    CHAR_T* sData = nullptr;
+    CHAR_T* pData = nullptr;
     size_t size = 0;
 
     StringView() = default;
-    StringView(char* sNullTerminated) : sData(sNullTerminated), size(strlen(sNullTerminated)) {}
-    StringView(char* sNullTerminated, size_t len) : sData(sNullTerminated), size(len) {}
-    StringView(String<CHAR_T> s) : sData(s.sData), size(s.size) {}
+    StringView(CHAR_T* sNullTerminated) : pData(sNullTerminated), size(strlen(sNullTerminated)) {}
+    StringView(CHAR_T* sNullTerminated, size_t len) : pData(sNullTerminated), size(len) {}
+    StringView(const String<CHAR_T>& s) : pData(s.pData), size(s.size) {}
 };
 
 } /* namespace adt */
