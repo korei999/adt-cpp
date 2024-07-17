@@ -79,17 +79,16 @@ main()
 
     adt::String stry1 = "stry1";
     adt::String stry2 = "stry2";
-    adt::String stry3 = stry1;
+    adt::String stry3;
 
     stry3 = stry2;
     printf("stry3: '%s'\n", stry3.pData);
 
     adt::HashMap<adt::String<char>> hm1{};
     hm1.insert("what");
-    /*hm1.insert("is");*/
 
-    auto fwhat = hm1.search("what");
-    if (fwhat.pData) printf("fwhat: '%s'\n", fwhat.pData->pData);
-    else printf("fwhat: not found\n");
+    /*auto fwhat = hm1.search("what");*/
+    /*if (fwhat.pData) printf("fwhat: '%s'\n", fwhat.pData->pData);*/
+    /*else printf("fwhat: not found\n");*/
 
 }

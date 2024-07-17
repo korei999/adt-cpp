@@ -21,6 +21,7 @@ struct String
     ~String() { this->allocator.free(this->pData); }
 
     CHAR_T& operator[](size_t i) { return this->pData[i]; }
+    const CHAR_T& operator[](size_t i) const { return this->pData[i]; }
     String& operator=(const String& other);
 };
 

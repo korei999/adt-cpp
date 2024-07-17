@@ -8,7 +8,7 @@ namespace adt
 
 constexpr f64 HASHMAP_DEFAULT_LOAD_FACTOR = 0.5;
 
-size_t
+constexpr size_t
 fnHash(const size_t& value)
 {
     return value;
@@ -21,7 +21,7 @@ fnHash(const String<CHAR_T, ALLOC>& str)
 {
     size_t hash = 0xCBF29CE484222325;
     for (size_t i = 0; i < str.size; i++)
-        hash = (hash ^ static_cast<size_t>(str.pData[i])) * 0x100000001B3;
+        hash = (hash ^ static_cast<size_t>(str[i])) * 0x100000001B3;
     return hash;
 }
 
