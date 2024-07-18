@@ -8,17 +8,18 @@
 int
 main()
 {
-    adt::Array<adt::StringView<char>> aS;
+    adt::Array<adt::StringView> aS;
     aS.push("what");
 
     adt::String kekw = "kekw";
     adt::String kekw2 = kekw;
+    printf("kekw2: '%s'\n", kekw2.pData);
 
     aS.push(kekw);
 
-    adt::HashMap<adt::StringView<char>> hmS{};
+    adt::HashMap<adt::StringView> hmS{};
     hmS.insert(kekw);
-    auto fs = hmS.search("what");
+    auto fs = hmS.search("kekw");
     if (fs.pData)
         printf("fs: '%s'\n", fs.pData->pData);
     else
