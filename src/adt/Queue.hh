@@ -49,7 +49,7 @@ struct Queue
         T& operator*() const { return self->pData[this->i]; }
         T* operator->() const { return &self->pData[this->i]; }
 
-        It&
+        It
         operator++()
         {
             if (this->counter >= self->size - 1)
@@ -64,7 +64,7 @@ struct Queue
             return *this;
         }
 
-        It& operator++(int) { It tmp = *this; *this++; return tmp; }
+        It operator++(int) { It tmp = *this; ++(*this); return tmp; }
 
         friend bool operator==(const It& l, const It& r) { return l.i == r.i; }
         friend bool operator!=(const It& l, const It& r) { return l.i != r.i; }

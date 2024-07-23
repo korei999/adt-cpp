@@ -1,7 +1,7 @@
 #pragma once
 
-#include <atomic>
-#include <threads.h>
+#include <atomic> /* C11 `_Atomic` doesn't work very well with MSVC and GCC */
+#include <threads.h> /* but C11 threads do work very well */
 
 #include "Queue.hh"
 
